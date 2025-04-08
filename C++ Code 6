@@ -1,0 +1,94 @@
+// Assigment 6: Data Structures
+// Name: Samantha Gonzalez
+// Date: 04/07/2025
+#include <iostream>
+using namespace std;
+
+//Hash table size
+constexpr int TABLE_SIZE = 907;
+//Value for empty slot
+constexpr int EMPTY = -1;
+//Value for deleted slot
+constexpr int DELETED = -2;
+
+int hashTable[TABLE_SIZE];
+
+//Initialize the hash table
+void initHashTable() {
+    for (int & i : hashTable) {
+        i = EMPTY;
+    }
+}
+
+//Hash function Table Size
+int hashFunction(const int key) {
+    return key % TABLE_SIZE;
+}
+
+//Insert Key Into Hash Table
+int HashInsertion(const int key) {
+    int hashIndex = hashFunction(key);
+
+    for (int i = 0; i < TABLE_SIZE; ++i) {
+        int probeIndex = (hashIndex + i) % TABLE_SIZE;
+
+        if (hashTable[probeIndex] == EMPTY || hashTable[probeIndex] == DELETED) {
+            hashTable[probeIndex] = key;
+            return probeIndex;
+        }
+    }
+
+    //Table is full
+    return -1;
+}
+
+//Delete Key From Hash Table
+int HashDeletion(const int key) {
+    int hashIndex = hashFunction(key);
+
+    for (int i = 0; i < TABLE_SIZE; ++i) {
+        const int probeIndex = (hashIndex + i) % TABLE_SIZE;
+
+        if (hashTable[probeIndex] == EMPTY) {
+            return -1;
+        }
+
+        if (hashTable[probeIndex] == key) {
+            hashTable[probeIndex] = DELETED;
+            return probeIndex;
+        }
+    }
+
+    return -1;
+}
+
+//Display (Debugged) Hash Table
+void displayHashTable() {
+    for (int i = 0; i < TABLE_SIZE; ++i) {
+        if (hashTable[i] == EMPTY)
+            cout << i << ": EMPTY\n";
+        else if (hashTable[i] == DELETED)
+            cout << i << ": DELETED\n";
+        else
+            cout << i << ": " << hashTable[i] << "\n";
+    }
+}
+
+int main() {
+    initHashTable();
+
+    //Output
+    HashInsertion(1000);
+    HashInsertion(1814);
+    HashInsertion(2721);
+    HashInsertion(3635);
+
+    cout << "Hash Table After Insertions:\n";
+    displayHashTable();
+
+    HashDeletion(1814);
+    cout << "\nHash Table After Deletion of 1814:\n";
+    displayHashTable();
+
+    return 0;
+}
